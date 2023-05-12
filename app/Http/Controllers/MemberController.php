@@ -99,6 +99,29 @@ class MemberController extends Controller
         ], 200);
     }
 
+    public function aktivasi($id)
+    {
+        // find the Instruktur instance by id
+        $member = Member::find($id);
+
+        $end = date('Y-m-d', strtotime('+1 years'));
+        
+        $member->STATUS_MEMBER = 1;
+        $member->TANGGAL_EXP_MEMBER = $end;
+        // $member->update($member->all());
+        if($member->save()){
+            return response([
+                'message' => 'Berhasil Mengaktivasi Member',
+                'data' => $member,
+            ], 200);
+        }
+
+        return response([
+            'message' => 'Gagal Mengaktivasi Member',
+            'data' => null,
+        ], 400);
+    }
+
     public function resetPw($id)
     {
         // find the Instruktur instance by id
