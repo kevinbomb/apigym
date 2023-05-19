@@ -5,15 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Perizinan extends Model
+class PresensiInstruktur extends Model
 {
     use HasFactory;
 
-    protected $table = 'perizinan';
-    protected $primaryKey = 'ID_PERIZINAN';
-
-    public $incrementing = false;
-    public $timestamps = false;
+    protected $table = 'presensi_instruktur';
+    protected $primaryKey = 'ID_PRESENSII';
     /**
     * fillable
     *
@@ -21,11 +18,12 @@ class Perizinan extends Model
     */
 
     protected $fillable = [
+        'ID_PRESENSII',
         'ID_INSTRUKTUR',
-        'KETERANGAN_PERIZINAN',
-        'STATUS_PERIZINAN',
-        'TANGGAL_PERIZINAN',
-        'TANGGAL_PERIZINAN_DIAJUKAN',
+        'WAKTU_MULAI',
+        'WAKTU_SELESAI',
+        'TERLAMBAT',
+        'DURASI',
     ]; 
 
     public function instruktur(){

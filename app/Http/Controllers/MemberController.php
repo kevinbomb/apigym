@@ -7,6 +7,7 @@ use App\Http\Requests\StoreMemberRequest;
 use App\Http\Requests\UpdateMemberRequest;
 use Illuminate\Http\JsonResponse;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Carbon\Carbon;
 
 class MemberController extends Controller
 {
@@ -19,6 +20,63 @@ class MemberController extends Controller
         return response($member);
     }
 
+    public function cekStatus()
+    {
+        $currentDate = Carbon::now()->toDateString();
+
+        $members = Member::where('TANGGAL_EXP_MEMBER', '<=', $currentDate)->get();
+
+        foreach ($members as $member) {
+            $member->TANGGAL_EXP_MEMBER = NULL;
+            $member->STATUS_MEMBER = 0;
+            $member->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Member status updated successfully.',
+            'data' => null
+        ], 200);
+    }
+
+    public function cekStatusIndex(){
+        $currentDate = Carbon::now()->toDateString();
+
+        $members = Member::where('TANGGAL_EXP_MEMBER', '<=', $currentDate)->get();
+        return response([
+            'message' => 'Berhasil mencari Member aktivasi habis',
+            'data' => $members
+        ], 200);
+    }
+
+    public function cekPaketTampil(){
+        $currentDate = Carbon::now()->toDateString();
+
+        $members = Member::where('TANGGAL_EXP_PAKET', '<=', $currentDate)->get();
+        return response([
+            'message' => 'Berhasil mencari Member paket habis',
+            'data' => $members
+        ], 200);
+    }
+
+    public function cekPaketUpdate()
+    {
+        $currentDate = Carbon::now()->toDateString();
+
+        $members = Member::where('TANGGAL_EXP_PAKET', '<=', $currentDate)->get();
+
+        foreach ($members as $member) {
+            $member->TANGGAL_EXP_PAKET = null;
+            $member->PAKET_MEMBER = 0;
+            $member->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Member package emptied successfully.',
+            'data' => null
+        ], 200);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -129,7 +187,7 @@ class MemberController extends Controller
 
         // update the member instance with the request data
         // $member->TANGGAL_LAHIR_MEMBER = ($member->TANGGAL_LAHIR_MEMBER);
-        $member->PASSWORD_MEMBER = bcrypt($member->TANGGAL_LAHIR_MEMBER);
+        $member->password = bcrypt($member->TANGGAL_LAHIR_MEMBER);
         // $member->update($member->all());
         if($member->save()){
             return response([

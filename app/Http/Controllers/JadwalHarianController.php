@@ -99,4 +99,38 @@ class JadwalHarianController extends Controller
         ], 200);
     }
 
+    public function show($id)
+    {
+        $jadwalHarian = JadwalHarian::join('jadwal', 'jadwalharian.ID_JADWAL', '=', 'jadwal.ID_JADWAL')
+            ->join('kelas', 'jadwal.ID_KELAS', '=', 'kelas.ID_KELAS')
+            ->join('instruktur', 'jadwal.ID_INSTRUKTUR', '=', 'instruktur.ID_INSTRUKTUR')
+            ->where('jadwalharian.ID_JADWALH', $id)
+            ->select(
+                'jadwalharian.TANGGAL_JADWALH',
+                'jadwal.SESI',
+                'jadwal.HARI_JADWAL',
+                'kelas.NAMA_KELAS',
+                'instruktur.NAMA_INSTRUKTUR',
+                'jadwalharian.STATUS_JADWALH',
+                'jadwalharian.ID_JADWALH'
+            )
+            ->first();
+
+        if ($jadwalHarian) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Jadwal Harian Found',
+                'data' => $jadwalHarian,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Jadwal Harian Not Found',
+            ], 404);
+        }
+    }
+
+
+
+
 }

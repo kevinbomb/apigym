@@ -6,6 +6,8 @@ use App\Models\Pegawai;
 use App\Http\Requests\StorePegawaiRequest;
 use App\Http\Requests\UpdatePegawaiRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PegawaiController extends Controller
 {
@@ -67,5 +69,31 @@ class PegawaiController extends Controller
     public function destroy(Pegawai $pegawai)
     {
         //
+    }
+
+    public function gantiPw(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_pegawai' => 'required',
+            'new_password' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $ins = Pegawai::find($request->id_pegawai);
+        $ins->password = bcrypt($request->new_password);
+        
+        if($ins->save()){
+            return response([
+                'message' => 'Berhasil Mengubah Password Pegawai',
+                'data' => $ins,
+            ], 200);
+        }
+
+        return response([
+            'message' => 'Gagal Mereset Password Pegawai',
+            'data' => null,
+        ], 400);
     }
 }

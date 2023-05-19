@@ -84,6 +84,7 @@ class TransaksiKelasController extends Controller
             
         ]);
         $member->PAKET_MEMBER = $total;
+        $member->TANGGAL_EXP_PAKET = $exp;
         $member->save();
         return response([
             'message' => 'Berhasil Menambahkan Data Deposit Kelas',

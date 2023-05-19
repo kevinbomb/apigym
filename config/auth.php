@@ -48,6 +48,22 @@ return [
             'driver' => 'passport',
             'provider' => 'pegawai',
         ],
+        'member'=> [
+            'driver' => 'session',
+            'provider' => 'member',
+        ],
+        'memberPassport' => [
+            'driver' => 'passport',
+            'provider' => 'member',
+        ],
+        'instruktur'=> [
+            'driver' => 'session',
+            'provider' => 'instruktur',
+        ],
+        'instrukturPassport' => [
+            'driver' => 'passport',
+            'provider' => 'instruktur',
+        ],
     ],
 
     /*
@@ -76,6 +92,16 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Pegawai::class,
             // 'table' => 'pegawai',
+        ],
+        'member' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Member::class,
+            // 'table' => 'member',
+        ],
+        'instruktur' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Instruktur::class,
+            // 'table' => 'instruktur',
         ],
 
         // 'users' => [

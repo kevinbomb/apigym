@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Instruktur;
 use App\Http\Requests\StoreInstrukturRequest;
 use App\Http\Requests\UpdateInstrukturRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -84,6 +85,32 @@ class InstrukturController extends Controller
             'message' => 'Berhasil Memperbarui Instruktur',
             'data' => $instruktur
         ], 200);
+    }
+
+    public function gantiPw(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'ID_INSTRUKTUR' => 'required',
+            'new_password' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $ins = Instruktur::find($request->ID_INSTRUKTUR);
+        $ins->password = bcrypt($request->new_password);
+        
+        if($ins->save()){
+            return response([
+                'message' => 'Berhasil Mengubah Password Instruktur',
+                'data' => $ins,
+            ], 200);
+        }
+
+        return response([
+            'message' => 'Gagal Mereset Password Instruktur',
+            'data' => null,
+        ], 400);
     }
 
         /**
