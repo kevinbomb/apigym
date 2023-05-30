@@ -99,6 +99,28 @@ class JadwalHarianController extends Controller
         ], 200);
     }
 
+    public function indexToday()
+    {
+        $currentDate = Carbon::now()->toDateString();
+    
+        $indexJadwalHarian = JadwalHarian::join('jadwal', 'jadwalharian.ID_JADWAL', '=', 'jadwal.ID_JADWAL')
+                        ->join('kelas', 'jadwal.ID_KELAS', '=', 'kelas.ID_KELAS')
+                        ->join('instruktur', 'jadwal.ID_INSTRUKTUR', '=', 'instruktur.ID_INSTRUKTUR')
+                        ->orderBy('jadwalharian.TANGGAL_JADWALH', 'asc')
+                        ->orderBy('jadwal.SESI')
+                        ->select('jadwalharian.TANGGAL_JADWALH', 'jadwal.SESI','jadwal.HARI_JADWAL', 'kelas.NAMA_KELAS', 'instruktur.ID_INSTRUKTUR', 'instruktur.NAMA_INSTRUKTUR', 'jadwalharian.STATUS_JADWALH', 'jadwalharian.ID_JADWALH')
+                        ->whereDate('TANGGAL_JADWALH', $currentDate)
+                        ->get();
+                        // ->groupBy('TANGGAL_JADWALH');
+                       
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar Jadwal Harian Hari Ini',
+            'data' => $indexJadwalHarian,
+        ], 200);
+    }
+
     public function show($id)
     {
         $jadwalHarian = JadwalHarian::join('jadwal', 'jadwalharian.ID_JADWAL', '=', 'jadwal.ID_JADWAL')

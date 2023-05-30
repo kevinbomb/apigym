@@ -18,6 +18,7 @@ use App\Http\Controllers\AuthMemberController;
 use App\Http\Controllers\AuthInstrukturController;
 use App\Http\Controllers\PresensiInstrukturController;
 use App\Http\Controllers\PresensiKelasController;
+use App\Http\Controllers\PresensiGymController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,21 +52,60 @@ Route::get('/perizinan/{id}', [PerizinanController::class, 'indexId']);
 Route::delete('/perizinan/{id}', [PerizinanController::class, 'destroy']);
 Route::post('/perizinan/{id}', [PerizinanController::class, 'store']);
 Route::get('/jadwalHarian', [JadwalHarianController::class, 'index']);
+Route::get('/jadwalHarianToday', [JadwalHarianController::class, 'indexToday']);
 Route::get('/jadwalHarian/{id}', [JadwalHarianController::class, 'show']);
 Route::put('/jadwalHarian/{id}', [JadwalHarianController::class, 'libur']);
 Route::post('/jadwalHarian', [JadwalHarianController::class, 'generateJadwalHarian']);
 Route::put('/konfPerizinan/{id}', [PerizinanController::class, 'konfirmasi']);
 Route::get('/presensiI', [PresensiInstrukturController::class, 'index']);
+Route::get('/presensiI/{id}', [PresensiInstrukturController::class, 'indexId']);
+Route::get('/presensiIongoing', [PresensiInstrukturController::class, 'indexOngoing']);
+Route::post('/presensiI', [PresensiInstrukturController::class, 'store']);
+Route::put('/presensiIselesai/{id}', [PresensiInstrukturController::class, 'selesai']);
 Route::put('/presensiI', [PresensiInstrukturController::class, 'resetTerlambat']);
+Route::post('/presensiI1', [PresensiInstrukturController::class, 'show']);
+Route::get('/presensiIterlambat/{id}', [PresensiInstrukturController::class, 'getTerlambat']);
+Route::get('/laporanInstruktur/{bulan}', [PresensiInstrukturController::class, 'laporan']);
 
+Route::get('/presensiGym', [PresensiGymController::class, 'index']);
+Route::get('/presensiGym/{id}', [PresensiGymController::class, 'indexId']);
+Route::post('/presensiGym', [PresensiGymController::class, 'store']);
+Route::get('/presensiGym1', [PresensiGymController::class, 'indexSatu']);
+Route::put('/konfPresensiGym/{id}', [PresensiGymController::class, 'konfirmasi']);
+Route::get('/presensiG/{id}', [PresensiGymController::class, 'show']);
+Route::delete('/presensiGym/{id}', [PresensiGymController::class, 'destroy']);
+Route::get('/laporanGymJan', [PresensiGymController::class, 'laporanJan']);
+Route::get('/laporanGymFeb', [PresensiGymController::class, 'laporanFeb']);
+Route::get('/laporanGymMar', [PresensiGymController::class, 'laporanMar']);
+Route::get('/laporanGymApr', [PresensiGymController::class, 'laporanApr']);
+Route::get('/laporanGymMay', [PresensiGymController::class, 'laporanMay']);
+Route::get('/laporanGymJun', [PresensiGymController::class, 'laporanJun']);
+Route::get('/laporanGymJul', [PresensiGymController::class, 'laporanJul']);
+Route::get('/laporanGymAug', [PresensiGymController::class, 'laporanAug']);
+Route::get('/laporanGymSep', [PresensiGymController::class, 'laporanSep']);
+Route::get('/laporanGymOkt', [PresensiGymController::class, 'laporanOkt']);
+Route::get('/laporanGymNov', [PresensiGymController::class, 'laporanNov']);
+Route::get('/laporanGymDes', [PresensiGymController::class, 'laporanDes']);
+Route::get('/laporanPendapatan', [TransaksiAktivasiController::class, 'laporan']);
+
+
+Route::get('/presensiKelas', [PresensiKelasController::class, 'index']);
+Route::get('/presensiKelasToday', [PresensiKelasController::class, 'indexToday']);
+Route::get('/presensiKelas1', [PresensiKelasController::class, 'indexSatu']);
+Route::put('/konfPresensiKelas/{id}', [PresensiKelasController::class, 'konfirmasi']);
+Route::put('/absPresensiKelas/{id}', [PresensiKelasController::class, 'absen']);
+Route::get('/presensiK/{id}', [PresensiKelasController::class, 'show']);
 Route::get('/presensiKelas/{id}', [PresensiKelasController::class, 'indexId']);
 Route::post('/presensiKelas', [PresensiKelasController::class, 'store']);
 Route::delete('/presensiKelas/{id}', [PresensiKelasController::class, 'destroy']);
+Route::get('/laporanKelas/{bulan}', [PresensiKelasController::class, 'laporan']);
 
 Route::get('/cekStatus', [MemberController::class, 'cekStatusIndex']);
 Route::put('/cekStatus', [MemberController::class, 'cekStatus']);
 Route::get('/cekPaket', [MemberController::class, 'cekPaketTampil']);
 Route::put('/cekPaket', [MemberController::class, 'cekPaketUpdate']);
+
+Route::get('/member/{id}', [MemberController::class, 'show']);
 
 // Protected routes (require authentication)
 Route::group(["middleware"=>'auth:pegawaiPassport'], function () {
@@ -92,7 +132,6 @@ Route::group(["middleware"=>'auth:pegawaiPassport'], function () {
     Route::get('/transaksiK/{id}', [TransaksiKelasController::class, 'show']);
     Route::post('/transaksiK/{id}', [TransaksiKelasController::class, 'store']);
     
-    Route::get('/member/{id}', [MemberController::class, 'show']);
     Route::post('/member', [MemberController::class, 'store']);
     Route::delete('/member/{id}', [MemberController::class, 'destroy']);
     Route::put('/member/{id}', [MemberController::class, 'update']);

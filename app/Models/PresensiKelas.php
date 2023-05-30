@@ -28,19 +28,20 @@ class PresensiKelas extends Model
         'NAMA_KELAS',
         'TANGGAL_PRESENSIK_DIBUAT',
         'TANGGAL_PRESENSIK',
+        'SESI',
         'WAKTU_PRESENSIK',
         'TARIF_PRESENSIK',
     ]; 
 
     public function jadwal(){
-        return $this->belongsTo(Member::class, 'ID_JADWAL', 'ID_JADWAL');
+        return $this->belongsTo(Jadwal::class, 'ID_JADWAL', 'ID_JADWAL');
     }
 
     public function jadwalh(){
-        return $this->belongsTo(Member::class, 'ID_JADWALH', 'ID_JADWALH');
+        return $this->belongsTo(Jadwalh::class, 'ID_JADWALH', 'ID_JADWALH');
     }
 
     public function member(){
-        return $this->belongsTo(Pegawai::class, 'NO_MEMBER', 'NO_MEMBER');
+        return $this->belongsTo(Member::class, 'NO_MEMBER', 'NO_MEMBER');
     }
 }

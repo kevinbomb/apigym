@@ -6,6 +6,7 @@ use App\Models\TransaksiAktivasi;
 use App\Models\Member;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class TransaksiAktivasiController extends Controller
@@ -90,5 +91,34 @@ class TransaksiAktivasiController extends Controller
     public function destroy(TransaksiAktivasi $transaksiAktivasi)
     {
         //
+    }
+
+    public function laporan(){
+        $results = DB::select('SELECT
+        MID(ta.TANGGAL_TRANSAKSIA, 6, 2) as `Month`,
+        sum(ta.BIAYA_TRANSAKSIA) AS Aktivasi,
+        (SELECT sum(tk.BIAYA_TRANSAKSIK) FROM transaksi_depositk tk WHERE LEFT(tk.TANGGAL_TRANSAKSIK, 7) = LEFT(ta.TANGGAL_TRANSAKSIA, 7))  as DepositK,
+        (SELECT sum(tu.JUMLAH_TRANSAKSIU) FROM transaksi_depositu tu WHERE LEFT(tu.TANGGAL_TRANSAKSIU, 7) = LEFT(ta.TANGGAL_TRANSAKSIA, 7)) as DepositU,
+        ((sum(ta.BIAYA_TRANSAKSIA)) + (SELECT sum(tk.BIAYA_TRANSAKSIK) FROM transaksi_depositk tk WHERE LEFT(tk.TANGGAL_TRANSAKSIK, 7) = LEFT(ta.TANGGAL_TRANSAKSIA, 7)) + (SELECT sum(tu.JUMLAH_TRANSAKSIU) FROM transaksi_depositu tu WHERE LEFT(tu.TANGGAL_TRANSAKSIU, 7) = LEFT(ta.TANGGAL_TRANSAKSIA, 7)) ) as Total
+        FROM transaksi_aktivasi ta
+        GROUP BY MID(ta.TANGGAL_TRANSAKSIA, 6, 2);');
+
+        // $results = DB::table('transaksi_aktivasi AS ta')
+        // ->selectRaw("MID(ta.TANGGAL_TRANSAKSIA, 6, 2) as Bulan")
+        // ->selectRaw("SUM(ta.BIAYA_TRANSAKSIA) AS Aktivasi")
+        // ->selectRaw("(SELECT SUM(tk.BIAYA_TRANSAKSIK) FROM transaksi_depositk tk WHERE LEFT(tk.TANGGAL_TRANSAKSIK, 7) = LEFT(ta.TANGGAL_TRANSAKSIA, 7)) AS DepositK")
+        // ->selectRaw("(SELECT SUM(tu.JUMLAH_TRANSAKSIU) FROM transaksi_depositu tu WHERE LEFT(tu.TANGGAL_TRANSAKSIU, 7) = LEFT(ta.TANGGAL_TRANSAKSIA, 7)) AS DepositU")
+        // ->selectRaw("( (SUM(ta.BIAYA_TRANSAKSIA)) + (SELECT SUM(tk.BIAYA_TRANSAKSIK) FROM transaksi_depositk tk WHERE LEFT(tk.TANGGAL_TRANSAKSIK, 7) = LEFT(ta.TANGGAL_TRANSAKSIA, 7)) + (SELECT SUM(tu.JUMLAH_TRANSAKSIU) FROM transaksi_depositu tu WHERE LEFT(tu.TANGGAL_TRANSAKSIU, 7) = LEFT(ta.TANGGAL_TRANSAKSIA, 7)) ) AS Total")
+        // ->groupBy(DB::raw("MID(ta.TANGGAL_TRANSAKSIA, 6, 2)"))
+        // ->groupBy(DB::raw("LEFT(ta.TANGGAL_TRANSAKSIA, 7)"))
+        // ->groupBy('ta.TANGGAL_TRANSAKSIA')
+        // ->get();
+
+        $total = DB::select (' SELECT (SELECT SUM(ta.BIAYA_TRANSAKSIA) FROM transaksi_aktivasi ta) + (SELECT SUM(tk.BIAYA_TRANSAKSIK) FROM transaksi_depositk tk) + (SELECT SUM(tu.JUMLAH_TRANSAKSIU) FROM transaksi_depositu tu) AS subtotal ');
+
+        return response([
+            'data' => $results,
+            'total' => $total
+        ], 200);
     }
 }
